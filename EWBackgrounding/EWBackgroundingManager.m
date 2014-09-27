@@ -173,7 +173,7 @@
         NSInteger count;
         NSDate *start = timer.userInfo[@"start_date"];
         count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
-        NSLog(@"Backgrounding started at %@ is checking the %ld times", start, (long)count);
+        NSLog(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceReferenceDate]);
         count++;
         timer.userInfo[@"count"] = @(count);
         userInfo = timer.userInfo;
@@ -184,9 +184,14 @@
         userInfo[@"count"] = @0;
     }
     
+    //check time left
+    double timeLeft = application.backgroundTimeRemaining;
+    NSLog(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
+    
     //schedule timer
     if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
     NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(60);
+    if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
     backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
     
     //start silent sound
@@ -200,16 +205,12 @@
         NSLog(@"The backgound task ended!");
     }];
     
-    //check time left
-    double timeLeft = application.backgroundTimeRemaining;
-    NSLog(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
-    
     //alert user
     if (backgroundingFailNotification) {
         [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
     }
     backgroundingFailNotification= [[UILocalNotification alloc] init];
-    backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
+    backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:randomInterval+10];
     backgroundingFailNotification.alertBody = @"Woke stopped running in background. Tap here to reactivate it.";
     backgroundingFailNotification.alertAction = @"Activate";
     backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
