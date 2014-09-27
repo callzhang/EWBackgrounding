@@ -14,6 +14,10 @@
 		9BB6ACA519D6335500111903 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACA419D6335500111903 /* Images.xcassets */; };
 		9BB6ACA819D6335500111903 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACA619D6335500111903 /* LaunchScreen.xib */; };
 		9BB6ACB419D6335500111903 /* EWBackgroundingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6ACB319D6335500111903 /* EWBackgroundingTests.m */; };
+		9BB6ACC219D6342D00111903 /* EWBackgroundingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC119D6342D00111903 /* EWBackgroundingManager.m */; };
+		9BB6ACC419D634EF00111903 /* media.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC319D634EF00111903 /* media.caf */; };
+		9BB6ACC619D6359800111903 /* Daybreak.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC519D6359800111903 /* Daybreak.caf */; };
+		9BB6ACC819D66F0600111903 /* tock.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC719D66F0600111903 /* tock.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +44,11 @@
 		9BB6ACAD19D6335500111903 /* EWBackgroundingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EWBackgroundingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BB6ACB219D6335500111903 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BB6ACB319D6335500111903 /* EWBackgroundingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EWBackgroundingTests.m; sourceTree = "<group>"; };
+		9BB6ACC019D6342D00111903 /* EWBackgroundingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EWBackgroundingManager.h; sourceTree = "<group>"; };
+		9BB6ACC119D6342D00111903 /* EWBackgroundingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EWBackgroundingManager.m; sourceTree = "<group>"; };
+		9BB6ACC319D634EF00111903 /* media.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = media.caf; sourceTree = "<group>"; };
+		9BB6ACC519D6359800111903 /* Daybreak.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Daybreak.caf; sourceTree = "<group>"; };
+		9BB6ACC719D66F0600111903 /* tock.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = tock.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,9 +94,14 @@
 				9BB6AC9C19D6335500111903 /* AppDelegate.m */,
 				9BB6AC9E19D6335500111903 /* ViewController.h */,
 				9BB6AC9F19D6335500111903 /* ViewController.m */,
+				9BB6ACC019D6342D00111903 /* EWBackgroundingManager.h */,
+				9BB6ACC119D6342D00111903 /* EWBackgroundingManager.m */,
 				9BB6ACA119D6335500111903 /* Main.storyboard */,
+				9BB6ACC719D66F0600111903 /* tock.caf */,
 				9BB6ACA419D6335500111903 /* Images.xcassets */,
 				9BB6ACA619D6335500111903 /* LaunchScreen.xib */,
+				9BB6ACC519D6359800111903 /* Daybreak.caf */,
+				9BB6ACC319D634EF00111903 /* media.caf */,
 				9BB6AC9719D6335500111903 /* Supporting Files */,
 			);
 			path = EWBackgrounding;
@@ -168,6 +182,11 @@
 				TargetAttributes = {
 					9BB6AC9319D6335500111903 = {
 						CreatedOnToolsVersion = 6.0.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					9BB6ACAC19D6335500111903 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -200,7 +219,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BB6ACA319D6335500111903 /* Main.storyboard in Resources */,
+				9BB6ACC419D634EF00111903 /* media.caf in Resources */,
 				9BB6ACA819D6335500111903 /* LaunchScreen.xib in Resources */,
+				9BB6ACC819D66F0600111903 /* tock.caf in Resources */,
+				9BB6ACC619D6359800111903 /* Daybreak.caf in Resources */,
 				9BB6ACA519D6335500111903 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +243,7 @@
 			files = (
 				9BB6ACA019D6335500111903 /* ViewController.m in Sources */,
 				9BB6AC9D19D6335500111903 /* AppDelegate.m in Sources */,
+				9BB6ACC219D6342D00111903 /* EWBackgroundingManager.m in Sources */,
 				9BB6AC9A19D6335500111903 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -346,6 +369,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = EWBackgrounding/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -356,6 +380,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = EWBackgrounding/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
