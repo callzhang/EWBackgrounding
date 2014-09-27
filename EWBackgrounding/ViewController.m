@@ -17,6 +17,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"backgrounding" object:nil queue:nil usingBlock:^(NSNotification *note) {
+        NSDate *start = note.userInfo[@"start_date"];
+        NSNumber *count = (NSNumber *)note.userInfo[@"count"];
+        self.textView.text = [NSString stringWithFormat:@"Backgrounding started at %@ is checking the %@ times, backgrounding length: %.1f hours, last checked: %@", start, count, -[start timeIntervalSinceReferenceDate], [NSDate date]];
+        
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

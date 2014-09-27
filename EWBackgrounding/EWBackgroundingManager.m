@@ -18,7 +18,7 @@
     UIBackgroundTaskIdentifier backgroundTaskIdentifier;
     UILocalNotification *backgroundingFailNotification;
     BOOL BACKGROUNDING_FROM_START;
-    AVPlayer *avplayer;
+    AVPlayer *player;
 }
 
 @end
@@ -184,6 +184,10 @@
         userInfo[@"count"] = @0;
     }
     
+    
+    //post local notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"backgrounding" object:nil userInfo:userInfo];
+    
     //check time left
     double timeLeft = application.backgroundTimeRemaining;
     NSLog(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
@@ -233,11 +237,6 @@
                                                     withOptions:AVAudioSessionCategoryOptionMixWithOthers
                                                           error:&error];
     if (!success) NSLog(@"AVAudioSession error setting category:%@",error);
-    //force speaker
-    //    success = [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker
-    //                                                                 error:&error];
-    //    if (!success || error) NSLog(@"AVAudioSession error overrideOutputAudioPort:%@",error);
-    //set active
     success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!success || error){
         NSLog(@"Unable to activate BACKGROUNDING audio session:%@", error);
@@ -261,13 +260,13 @@
 - (void)playAvplayerWithURL:(NSURL *)url{
     
     //AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
-    avplayer = [AVPlayer playerWithURL:url];
-    [avplayer setActionAtItemEnd:AVPlayerActionAtItemEndPause];
-    avplayer.volume = 1.0;
-    if (avplayer.status == AVPlayerStatusFailed) {
+    player = [AVPlayer playerWithURL:url];
+    [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
+    player.volume = 1.0;
+    if (player.status == AVPlayerStatusFailed) {
         NSLog(@"!!! AV player not ready to play.");
     }
     //[avplayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
-    [avplayer play];
+    [player play];
 }
 @end

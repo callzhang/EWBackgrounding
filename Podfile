@@ -1,2 +1,2 @@
 platform :ios, '8.0'
-pod 'BRCocoaLumberjack', '~> 1.8'
+pod 'CocoaLumberjack', '2.0.0-beta'
