@@ -9,9 +9,7 @@
 //
 
 #import "EWBackgroundingManager.h"
-#import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVFoundation.h>
-
+#import <CocoaLumberjack/CocoaLumberjack.h>
 
 @interface EWBackgroundingManager(){
     NSTimer *backgroundingtimer;
@@ -66,7 +64,7 @@
     if ([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]){
         supported = [[UIDevice currentDevice] isMultitaskingSupported];
     }else {
-        NSLog(@"Your device doesn't support background task. Alarm will not fire. Please change your settings.");
+        DDLogInfo(@"Your device doesn't support background task. Alarm will not fire. Please change your settings.");
         supported = NO;
     }
     return supported;
@@ -134,12 +132,21 @@
 - (void)startBackgrounding{
     self.sleeping = YES;
     [self registerAudioSession];
-    [self backgroundKeepAlive:nil];
-    NSLog(@"Start Sleep");
+	[self backgroundKeepAlive:nil];
+    DDLogInfo(@"Start Sleep");
+	static NSTimer *timer;
+	[timer invalidate];
+	timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
+}
+
+- (float)findTimeLeft{
+	float t = [UIApplication sharedApplication].backgroundTimeRemaining;
+	DDLogVerbose(@"Time remaining is: %.1f", t);
+	return t;
 }
 
 - (void)endBackgrounding{
-    NSLog(@"End Sleep");
+    DDLogInfo(@"End Sleep");
     self.sleeping = NO;
     
     UIApplication *application = [UIApplication sharedApplication];
@@ -167,13 +174,17 @@
 
 
 - (void)backgroundKeepAlive:(NSTimer *)timer{
+	
+	//start silent sound
+	[self playSilentSound];
+	
     UIApplication *application = [UIApplication sharedApplication];
     NSMutableDictionary *userInfo;
     if (timer) {
         NSInteger count;
         NSDate *start = timer.userInfo[@"start_date"];
         count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
-        NSLog(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceReferenceDate]);
+        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]);
         count++;
         timer.userInfo[@"count"] = @(count);
         userInfo = timer.userInfo;
@@ -183,38 +194,38 @@
         userInfo[@"start_date"] = [NSDate date];
         userInfo[@"count"] = @0;
     }
-    
-    
-    //post local notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"backgrounding" object:nil userInfo:userInfo];
-    
-    //check time left
-    double timeLeft = application.backgroundTimeRemaining;
-    NSLog(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
-    
-    //schedule timer
-    if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
-    NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(60);
-    if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
-    backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
-    
-    //start silent sound
-    [self playSilentSound];
-    
+	
+	//post notification to UI
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"backgrounding" object:self userInfo:userInfo];
+	
     //end old background task
-    [application endBackgroundTask:backgroundTaskIdentifier];
+	UIBackgroundTaskIdentifier tempID = backgroundTaskIdentifier;
+	
     //begin a new background task
-    backgroundTaskIdentifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        //[self backgroundTaskKeepAlive:nil];
-        NSLog(@"The backgound task ended!");
+    backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+        DDLogError(@"The backgound task ended!");
     }];
-    
+	//end old bg task
+	[application endBackgroundTask:tempID];
+	
+	//check time left
+	double timeLeft = application.backgroundTimeRemaining;
+	DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
+	
+	//schedule timer
+	[NSThread sleepForTimeInterval:1];
+	if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
+	NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(60);
+	if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
+	backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
+	DDLogVerbose(@"Scheduled timer %d", randomInterval);
+	
     //alert user
     if (backgroundingFailNotification) {
         [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
     }
     backgroundingFailNotification= [[UILocalNotification alloc] init];
-    backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:randomInterval+10];
+    backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
     backgroundingFailNotification.alertBody = @"Woke stopped running in background. Tap here to reactivate it.";
     backgroundingFailNotification.alertAction = @"Activate";
     backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
@@ -226,23 +237,15 @@
 
 //register the BACKGROUNDING audio session
 - (void)registerAudioSession{
-    //deactivated first
-    [[AVAudioSession sharedInstance] setActive:NO error:NULL];
     
     //audio session
     [[AVAudioSession sharedInstance] setDelegate: self];
     NSError *error = nil;
     //set category
-    BOOL success = [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
                                                     withOptions:AVAudioSessionCategoryOptionMixWithOthers
                                                           error:&error];
-    if (!success) NSLog(@"AVAudioSession error setting category:%@",error);
-    success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    if (!success || error){
-        NSLog(@"Unable to activate BACKGROUNDING audio session:%@", error);
-    }else{
-        NSLog(@"BACKGROUNDING Audio session activated!");
-    }
+
     //set active bg sound
     [self playSilentSound];
 }
@@ -250,8 +253,7 @@
 
 - (void)playSilentSound{
 #if !TARGET_IPHONE_SIMULATOR
-    NSLog(@"Play silent sound");
-    //NSURL *path = [[NSBundle mainBundle] URLForResource:@"tock" withExtension:@"caf"];
+    DDLogInfo(@"Play silent sound");
     NSURL *path = [[NSBundle mainBundle] URLForResource:@"tock" withExtension:@"caf"];
     [self playAvplayerWithURL:path];
 #endif
@@ -261,12 +263,34 @@
     
     //AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
     player = [AVPlayer playerWithURL:url];
-    [player setActionAtItemEnd:AVPlayerActionAtItemEndNone];
+    [player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
     player.volume = 1.0;
     if (player.status == AVPlayerStatusFailed) {
-        NSLog(@"!!! AV player not ready to play.");
+        DDLogInfo(@"!!! AV player not ready to play.");
     }
     //[avplayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
     [player play];
+}
+
+#pragma mark - delegate
+- (void)beginInterruption{
+	[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
+}
+
+- (void)endInterruptionWithFlags:(NSUInteger)flags{
+	if (flags) {
+		if (AVAudioSessionInterruptionOptionShouldResume) {
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				
+				[self startBackgrounding];
+#ifdef DEBUG
+				UILocalNotification *n = [UILocalNotification new];
+				n.alertBody = @"active";
+				[[UIApplication sharedApplication] scheduleLocalNotification:n];
+#endif
+				
+			});
+		}
+	}
 }
 @end

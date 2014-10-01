@@ -12,10 +12,12 @@
 #define kLocalNotificationTypeReactivate    @"reactivate"
 #define kAlarmTimerCheckInterval    120
 @import UIKit;
+@import AVFoundation;
+@import AudioToolbox;
 
 @class EWTaskItem;
 
-@interface EWBackgroundingManager : NSObject
+@interface EWBackgroundingManager : NSObject<AVAudioSessionDelegate>
 @property (nonatomic) BOOL sleeping;
 @property (nonatomic) EWTaskItem *task;
 
