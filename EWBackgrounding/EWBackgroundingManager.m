@@ -213,9 +213,9 @@
 	DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
 	
 	//schedule timer
-	[NSThread sleepForTimeInterval:1];
+	[NSThread sleepForTimeInterval:2];
 	if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
-	NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(60);
+	NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(50);
 	if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
 	backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
 	DDLogVerbose(@"Scheduled timer %d", randomInterval);
