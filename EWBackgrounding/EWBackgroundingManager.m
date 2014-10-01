@@ -184,7 +184,7 @@
         NSInteger count;
         NSDate *start = timer.userInfo[@"start_date"];
         count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
-        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]);
+        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]/3600);
         count++;
         timer.userInfo[@"count"] = @(count);
         userInfo = timer.userInfo;
@@ -198,22 +198,23 @@
 	//post notification to UI
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"backgrounding" object:self userInfo:userInfo];
 	
-    //end old background task
+    //keep old background task
 	UIBackgroundTaskIdentifier tempID = backgroundTaskIdentifier;
-	
     //begin a new background task
     backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
         DDLogError(@"The backgound task ended!");
     }];
 	//end old bg task
-	[application endBackgroundTask:tempID];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [application endBackgroundTask:tempID];
+    });
 	
 	//check time left
 	double timeLeft = application.backgroundTimeRemaining;
 	DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
 	
 	//schedule timer
-	[NSThread sleepForTimeInterval:2];
+	[NSThread sleepForTimeInterval:5];
 	if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
 	NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(50);
 	if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
