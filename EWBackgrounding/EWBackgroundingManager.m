@@ -136,7 +136,7 @@
     DDLogInfo(@"Start Sleep");
 	static NSTimer *timer;
 	[timer invalidate];
-	timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
+	timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
 }
 
 - (float)findTimeLeft{
