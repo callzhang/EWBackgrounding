@@ -83,11 +83,7 @@
     [self registerAudioSession];
     [backgroundingtimer invalidate];
     
-    if (!self.sleeping && !BACKGROUNDING_FROM_START) {
-        [self endBackgrounding];
-    }else{
-        //[self startBackgrounding];
-    }
+    [self endBackgrounding];
     
     for (UILocalNotification *note in [UIApplication sharedApplication].scheduledLocalNotifications) {
         if ([note.userInfo[kLocalNotificationTypeKey] isEqualToString:kLocalNotificationTypeReactivate]) {
@@ -130,13 +126,12 @@
 #pragma mark - Backgrounding
 
 - (void)startBackgrounding{
-    self.sleeping = YES;
 	[self registerAudioSession];
 	[self backgroundKeepAlive:nil];
     DDLogInfo(@"Start Sleep");
 	static NSTimer *timer;
 	[timer invalidate];
-	timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
+	timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
 }
 
 - (float)findTimeLeft{
@@ -163,12 +158,6 @@
     //stop backgrounding fail notif
     if (backgroundingFailNotification) {
         [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
-    }else{
-        for (UILocalNotification *n in [UIApplication sharedApplication].scheduledLocalNotifications) {
-            if ([n.userInfo[kLocalNotificationTypeKey] isEqualToString:kLocalNotificationTypeReactivate]) {
-                [[UIApplication sharedApplication] cancelLocalNotification:n];
-            }
-        }
     }
 }
 
@@ -205,34 +194,38 @@
         DDLogError(@"The backgound task ended!");
     }];
 	//end old bg task
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [application endBackgroundTask:tempID];
     });
 	
 	//check time left
-	double timeLeft = application.backgroundTimeRemaining;
-	DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		double timeLeft = application.backgroundTimeRemaining;
+		DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
+		
+		//schedule timer
+		if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
+		NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
+		if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
+		backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
+		DDLogVerbose(@"Scheduled timer %d", randomInterval);
+		
+	});
 	
-	//schedule timer
-	[NSThread sleepForTimeInterval:5];
-	if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
-	NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(50);
-	if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
-	backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
-	DDLogVerbose(@"Scheduled timer %d", randomInterval);
 	
-    //alert user
-    if (backgroundingFailNotification) {
-        [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
-    }
-    backgroundingFailNotification= [[UILocalNotification alloc] init];
-    backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
-    backgroundingFailNotification.alertBody = @"Woke stopped running in background. Tap here to reactivate it.";
-    backgroundingFailNotification.alertAction = @"Activate";
-    backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
-    backgroundingFailNotification.soundName = @"new.caf";
-    [[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
-    
+	//alert user
+	if (backgroundingFailNotification) {
+		[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
+	}
+	if (self.sleeping) {
+		backgroundingFailNotification= [[UILocalNotification alloc] init];
+		backgroundingFailNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:200];
+		backgroundingFailNotification.alertBody = @"Woke stopped running. Tap here to reactivate it.";
+		backgroundingFailNotification.alertAction = @"Activate";
+		backgroundingFailNotification.userInfo = @{kLocalNotificationTypeKey: kLocalNotificationTypeReactivate};
+		backgroundingFailNotification.soundName = @"new.caf";
+		[[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
+	}
 }
 
 
@@ -246,7 +239,6 @@
     [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback
                                                     withOptions:AVAudioSessionCategoryOptionMixWithOthers
                                                           error:&error];
-
     //set active bg sound
     [self playSilentSound];
 }
