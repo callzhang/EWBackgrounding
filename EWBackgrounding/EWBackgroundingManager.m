@@ -129,9 +129,9 @@
 	[self registerAudioSession];
 	[self backgroundKeepAlive:nil];
     DDLogInfo(@"Start Sleep");
-	static NSTimer *timer;
-	[timer invalidate];
-	timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
+//	static NSTimer *timer;
+//	[timer invalidate];
+//	timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
 }
 
 - (float)findTimeLeft{
@@ -172,16 +172,26 @@
     if (timer) {
         NSInteger count;
         NSDate *start = timer.userInfo[@"start_date"];
+		NSDate *last = timer.userInfo[@"last"];
         count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
-        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours", start, (long)count, -[start timeIntervalSinceNow]/3600);
+		float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
+		float batt1 = [UIDevice currentDevice].batteryLevel;
+		float dur = -[last timeIntervalSinceNow]/3600;
+		float t = batt1 / ((batt0 - batt1)/dur);
+        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours, estimated battery life is %0.1f hours", start, (long)count, dur, t);
         count++;
         timer.userInfo[@"count"] = @(count);
+		userInfo[@"batt"] = @(batt1);
+		userInfo[@"last"] = [NSDate date];
         userInfo = timer.userInfo;
     }else{
         //first time
+		[UIDevice currentDevice].batteryMonitoringEnabled = YES;
         userInfo = [NSMutableDictionary new];
         userInfo[@"start_date"] = [NSDate date];
+		userInfo[@"last"] = [NSDate date];
         userInfo[@"count"] = @0;
+		userInfo[@"batt"] = @([UIDevice currentDevice].batteryLevel);
     }
 	
 	//post notification to UI
