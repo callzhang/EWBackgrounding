@@ -10,6 +10,9 @@
 #import "EWBackgroundingManager.h"
 #import <CocoaLumberjack.h>
 #import "ViewController.h"
+#import "TestFlight.h"
+#import "TestFlight+ManualSessions.h"
+#import "TestFlightLogger.h"
 #define NSLOG	DDLogInfo
 
 
@@ -21,6 +24,13 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	//test flight
+	[TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+	[TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+	[TestFlight setOptions:@{ TFOptionManualSessions : @YES }];
+	[TestFlight takeOff:@"9e2b55a0-3827-496d-9a98-a63dea988167"];
+	[TestFlight manuallyStartSession];
+	
     // Override point for customization after application launch.
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     
@@ -40,11 +50,13 @@
     [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
     [log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
     [log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:LOG_FLAG_WARN];
-    
-    
+	
+	[DDLog addLogger:[TestFlightLogger sharedInstance]];
+	
+	//===================================
     [EWBackgroundingManager sharedInstance];
     
-    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIViewController *vc = [[ViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = vc;
     [self.window makeKeyAndVisible];
@@ -71,6 +83,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+	[TestFlight manuallyEndSession];
 }
 
 

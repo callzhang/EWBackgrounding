@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9BACE07219E8746500701D27 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BACE07119E8746500701D27 /* libz.dylib */; };
 		9BB6AC9A19D6335500111903 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6AC9919D6335500111903 /* main.m */; };
 		9BB6AC9D19D6335500111903 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6AC9C19D6335500111903 /* AppDelegate.m */; };
 		9BB6ACA019D6335500111903 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6AC9F19D6335500111903 /* ViewController.m */; };
-		9BB6ACA319D6335500111903 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACA119D6335500111903 /* Main.storyboard */; };
 		9BB6ACA519D6335500111903 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACA419D6335500111903 /* Images.xcassets */; };
-		9BB6ACA819D6335500111903 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACA619D6335500111903 /* LaunchScreen.xib */; };
 		9BB6ACB419D6335500111903 /* EWBackgroundingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6ACB319D6335500111903 /* EWBackgroundingTests.m */; };
 		9BB6ACC219D6342D00111903 /* EWBackgroundingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC119D6342D00111903 /* EWBackgroundingManager.m */; };
 		9BB6ACC419D634EF00111903 /* media.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC319D634EF00111903 /* media.caf */; };
@@ -35,6 +34,7 @@
 /* Begin PBXFileReference section */
 		68060FDCE9AA4212B68528A5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		9BA157C419DB688800F0F37B /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		9BACE07119E8746500701D27 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		9BB6AC9419D6335500111903 /* EWBackgrounding.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EWBackgrounding.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BB6AC9819D6335500111903 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BB6AC9919D6335500111903 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -62,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BACE07219E8746500701D27 /* libz.dylib in Frameworks */,
 				AE78E3627A4A467FBB5F291E /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,6 +80,7 @@
 		36267C6DF5E14101BC3F9CCD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BACE07119E8746500701D27 /* libz.dylib */,
 				EAA1D4F56F8843EDB1801430 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -240,9 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BEE059B19D691630040093F /* View.xib in Resources */,
-				9BB6ACA319D6335500111903 /* Main.storyboard in Resources */,
 				9BB6ACC419D634EF00111903 /* media.caf in Resources */,
-				9BB6ACA819D6335500111903 /* LaunchScreen.xib in Resources */,
 				9BB6ACC819D66F0600111903 /* tock.caf in Resources */,
 				9BB6ACC619D6359800111903 /* Daybreak.caf in Resources */,
 				9BB6ACA519D6335500111903 /* Images.xcassets in Resources */,

@@ -44,8 +44,12 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActive) name:UIApplicationWillResignActiveNotification object:nil];
         //become active
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didbecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
-
+		//terminate
+		[[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+			NSDate *start = backgroundingtimer.userInfo[@"start"];
+			DDLogError(@"Application will terminate with %.1f hours of running. Current battery level is %.1f%%", -start.timeIntervalSinceNow/3600, [UIDevice currentDevice].batteryLevel*100);
+		}];
+		
         BACKGROUNDING_FROM_START = YES;
     }
     
@@ -171,14 +175,14 @@
     NSMutableDictionary *userInfo;
     if (timer) {
         NSInteger count;
-        NSDate *start = timer.userInfo[@"start_date"];
+        NSDate *start = timer.userInfo[@"start"];
 		NSDate *last = timer.userInfo[@"last"];
         count = [(NSNumber *)timer.userInfo[@"count"] integerValue];
 		float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
 		float batt1 = [UIDevice currentDevice].batteryLevel;
 		float dur = -[last timeIntervalSinceNow]/3600;
 		float t = batt1 / ((batt0 - batt1)/dur);
-        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours, estimated battery life is %0.1f hours", start, (long)count, dur, t);
+        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. Battery level is %.1f%% and estimated life is %0.1f hours", start, (long)count, dur, batt1*100.0f, t);
         count++;
         timer.userInfo[@"count"] = @(count);
 		userInfo[@"batt"] = @(batt1);
@@ -188,7 +192,7 @@
         //first time
 		[UIDevice currentDevice].batteryMonitoringEnabled = YES;
         userInfo = [NSMutableDictionary new];
-        userInfo[@"start_date"] = [NSDate date];
+        userInfo[@"start"] = [NSDate date];
 		userInfo[@"last"] = [NSDate date];
         userInfo[@"count"] = @0;
 		userInfo[@"batt"] = @([UIDevice currentDevice].batteryLevel);

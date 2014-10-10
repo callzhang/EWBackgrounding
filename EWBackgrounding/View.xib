@@ -15,11 +15,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Bcakgrounding started at xxx is run xx times with length of x hours. Last updated at xxx AM." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="NQb-kZ-2c8">
-                    <rect key="frame" x="0.0" y="67" width="320" height="334"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Bcakgrounding started at xxx is run xx times with length of x hours. Last updated at xxx AM. Battery level is xx%." translatesAutoresizingMaskIntoConstraints="NO" id="NQb-kZ-2c8">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
             </subviews>
