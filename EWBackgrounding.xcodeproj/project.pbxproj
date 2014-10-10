@@ -17,6 +17,7 @@
 		9BB6ACC419D634EF00111903 /* media.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC319D634EF00111903 /* media.caf */; };
 		9BB6ACC619D6359800111903 /* Daybreak.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC519D6359800111903 /* Daybreak.caf */; };
 		9BB6ACC819D66F0600111903 /* tock.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB6ACC719D66F0600111903 /* tock.caf */; };
+		9BC20E9F19E88DE900AF61AA /* bg.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9BC20E9E19E88DE900AF61AA /* bg.caf */; };
 		9BEE059B19D691630040093F /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE059A19D691630040093F /* View.xib */; };
 		AE78E3627A4A467FBB5F291E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAA1D4F56F8843EDB1801430 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		9BB6ACC319D634EF00111903 /* media.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = media.caf; sourceTree = "<group>"; };
 		9BB6ACC519D6359800111903 /* Daybreak.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Daybreak.caf; sourceTree = "<group>"; };
 		9BB6ACC719D66F0600111903 /* tock.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = tock.caf; sourceTree = "<group>"; };
+		9BC20E9E19E88DE900AF61AA /* bg.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = bg.caf; sourceTree = "<group>"; };
 		9BEE059A19D691630040093F /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		EAA1D4F56F8843EDB1801430 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -118,6 +120,7 @@
 				9BB6ACC119D6342D00111903 /* EWBackgroundingManager.m */,
 				9BB6ACA119D6335500111903 /* Main.storyboard */,
 				9BB6ACC719D66F0600111903 /* tock.caf */,
+				9BC20E9E19E88DE900AF61AA /* bg.caf */,
 				9BB6ACA419D6335500111903 /* Images.xcassets */,
 				9BB6ACA619D6335500111903 /* LaunchScreen.xib */,
 				9BB6ACC519D6359800111903 /* Daybreak.caf */,
@@ -244,6 +247,7 @@
 				9BEE059B19D691630040093F /* View.xib in Resources */,
 				9BB6ACC419D634EF00111903 /* media.caf in Resources */,
 				9BB6ACC819D66F0600111903 /* tock.caf in Resources */,
+				9BC20E9F19E88DE900AF61AA /* bg.caf in Resources */,
 				9BB6ACC619D6359800111903 /* Daybreak.caf in Resources */,
 				9BB6ACA519D6335500111903 /* Images.xcassets in Resources */,
 			);

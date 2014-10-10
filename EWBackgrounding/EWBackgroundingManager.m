@@ -132,16 +132,7 @@
 - (void)startBackgrounding{
 	[self registerAudioSession];
 	[self backgroundKeepAlive:nil];
-    DDLogInfo(@"Start Sleep");
-//	static NSTimer *timer;
-//	[timer invalidate];
-//	timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(findTimeLeft) userInfo:nil repeats:YES];
-}
-
-- (float)findTimeLeft{
-	float t = [UIApplication sharedApplication].backgroundTimeRemaining;
-	DDLogVerbose(@"Time remaining is: %.1f", t);
-	return t;
+    DDLogInfo(@"Start Backgrounding");
 }
 
 - (void)endBackgrounding{
@@ -261,7 +252,7 @@
 - (void)playSilentSound{
 #if !TARGET_IPHONE_SIMULATOR
     DDLogInfo(@"Play silent sound");
-    NSURL *path = [[NSBundle mainBundle] URLForResource:@"tock" withExtension:@"caf"];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"bg" withExtension:@"caf"];
     [self playAvplayerWithURL:path];
 #endif
 }
