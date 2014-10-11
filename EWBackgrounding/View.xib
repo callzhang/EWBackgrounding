@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A379b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <objects>
@@ -15,15 +16,25 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Bcakgrounding started at xxx is run xx times with length of x hours. Last updated at xxx AM. Battery level is xx%." translatesAutoresizingMaskIntoConstraints="NO" id="NQb-kZ-2c8">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Bcakgrounding started at xxx is run xx times with length of x hours. Last updated at xxx AM. Battery level is xx%." translatesAutoresizingMaskIntoConstraints="NO" id="NQb-kZ-2c8">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="568" id="A7Z-tx-Jd3"/>
+                        <constraint firstAttribute="width" constant="320" id="ZIc-OI-yKP"/>
+                    </constraints>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="NQb-kZ-2c8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="21K-aX-T1a"/>
+                <constraint firstItem="NQb-kZ-2c8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Crs-KK-Ps0"/>
+                <constraint firstAttribute="bottom" secondItem="NQb-kZ-2c8" secondAttribute="bottom" id="a2l-qw-Pkf"/>
+                <constraint firstAttribute="trailing" secondItem="NQb-kZ-2c8" secondAttribute="trailing" id="c56-PJ-ZQV"/>
+            </constraints>
             <point key="canvasLocation" x="339" y="663"/>
         </view>
     </objects>

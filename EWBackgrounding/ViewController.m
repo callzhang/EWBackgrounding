@@ -24,9 +24,18 @@
         NSNumber *count = (NSNumber *)note.userInfo[@"count"];
 		float batt0 = [(NSNumber *)note.userInfo[@"batt"] floatValue];
 		float batt1 = [UIDevice currentDevice].batteryLevel;
-		float dur = -[last timeIntervalSinceNow]/3600;
-		float t = batt1 / ((batt0 - batt1)/dur);
-        NSString *newLine = [NSString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %@ times, backgrounding length: %.1f hours. Current battery level is %.1f %%, and estimated time left is %.1f hours", [NSDate date], start, count, -[start timeIntervalSinceNow]/3600, batt1*100.0f, t];
+        float dur = -[last timeIntervalSinceNow]/3600;
+        float t;
+        NSMutableString *newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %@ times, backgrounding length: %.1f hours. ", [NSDate date], start, count, -[start timeIntervalSinceNow]/3600];
+        if (batt0 > batt1) {
+            //not charging
+            t = batt1 / ((batt0 - batt1)/dur);
+            [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time left is %.1f hours", batt1*100.0f, t];
+        }else{
+            t = (1-batt0)/((batt1 - batt0)/dur);
+            [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time until fully chaged is %.1f hours", batt1*100.0f, t];
+        }
+        
 		self.textView.text = [self.textView.text stringByAppendingString:newLine];
     }];
 }

@@ -47,7 +47,7 @@
 		//terminate
 		[[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
 			NSDate *start = backgroundingtimer.userInfo[@"start"];
-			DDLogError(@"Application will terminate with %.1f hours of running. Current battery level is %.1f%%", -start.timeIntervalSinceNow/3600, [UIDevice currentDevice].batteryLevel*100);
+			DDLogError(@"Application will terminate after %.1f hours of running. Current battery level is %.1f%%", -start.timeIntervalSinceNow/3600, [UIDevice currentDevice].batteryLevel*100);
 		}];
 		
         BACKGROUNDING_FROM_START = YES;
@@ -121,10 +121,6 @@
         notif.alertBody = @"Woke become active!";
         [app scheduleLocalNotification:notif];
     }
-    
-    if (self.sleeping || BACKGROUNDING_FROM_START) {
-        [self startBackgrounding];
-    }
 }
 
 #pragma mark - Backgrounding
@@ -172,8 +168,17 @@
 		float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
 		float batt1 = [UIDevice currentDevice].batteryLevel;
 		float dur = -[last timeIntervalSinceNow]/3600;
-		float t = batt1 / ((batt0 - batt1)/dur);
-        DDLogInfo(@"Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. Battery level is %.1f%% and estimated life is %0.1f hours", start, (long)count, dur, batt1*100.0f, t);
+        float t;
+        NSMutableString *newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", [NSDate date], start, (long)count, -[start timeIntervalSinceNow]/3600];
+        if (batt0 >= batt1) {
+            //not charging
+            t = batt1 / ((batt0 - batt1)/dur);
+            [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time left is %.1f hours", batt1*100.0f, t];
+        }else{
+            t = (1.0f-batt0)/((batt0 - batt1)/dur);
+            [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time until fully chaged is %.1f hours", batt1*100.0f, t];
+        }
+        DDLogInfo(newLine);
         count++;
         timer.userInfo[@"count"] = @(count);
 		userInfo[@"batt"] = @(batt1);
@@ -213,7 +218,7 @@
 		NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
 		if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
 		backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
-		DDLogVerbose(@"Scheduled timer %d", randomInterval);
+		DDLogVerbose(@"Scheduled timer %ld", (long)randomInterval);
 		
 	});
 	
@@ -272,7 +277,8 @@
 
 #pragma mark - delegate
 - (void)beginInterruption{
-	[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
+    if(backgroundingFailNotification)
+        [[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
 }
 
 - (void)endInterruptionWithFlags:(NSUInteger)flags{
