@@ -121,6 +121,11 @@
         notif.alertBody = @"Woke become active!";
         [app scheduleLocalNotification:notif];
     }
+    else {
+        if (backgroundingFailNotification) {
+            [app cancelLocalNotification:backgroundingFailNotification];
+        }
+    }
 }
 
 #pragma mark - Backgrounding
@@ -250,7 +255,7 @@
                                                     withOptions:AVAudioSessionCategoryOptionMixWithOthers
                                                           error:&error];
     //set active bg sound
-    [self playSilentSound];
+    //[self playSilentSound];
 }
 
 
