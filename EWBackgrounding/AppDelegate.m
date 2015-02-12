@@ -10,9 +10,8 @@
 #import "EWBackgroundingManager.h"
 #import <CocoaLumberjack.h>
 #import "ViewController.h"
-#import "TestFlight.h"
-#import "TestFlight+ManualSessions.h"
-#import "TestFlightLogger.h"
+#import "CrashlyticsLogger.h"
+#import "Crashlytics.h"
 #define NSLOG	DDLogInfo
 
 
@@ -24,13 +23,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	//test flight
-	[TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-	[TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-	[TestFlight setOptions:@{ TFOptionManualSessions : @YES }];
-	[TestFlight takeOff:@"9e2b55a0-3827-496d-9a98-a63dea988167"];
-	[TestFlight manuallyStartSession];
-	
+	[Crashlytics startWithAPIKey:@"6ec9eab6ca26fcd18d51d0322752b861c63bc348"];
     // Override point for customization after application launch.
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     
@@ -46,12 +39,13 @@
     // because this require some setup for Xcode, commented out here.
     // https://github.com/CocoaLumberjack/CocoaLumberjack/wiki/XcodeColors
     [log setColorsEnabled:YES];
-    [log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
-    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:LOG_FLAG_ERROR];
-    [log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
-    [log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:LOG_FLAG_WARN];
+    [log setForegroundColor:[UIColor orangeColor] backgroundColor:nil forFlag:DDLogFlagInfo];
+    [log setForegroundColor:[UIColor redColor] backgroundColor:nil forFlag:DDLogFlagError];
+    [log setForegroundColor:[UIColor darkGrayColor] backgroundColor:nil forFlag:DDLogFlagVerbose];
+    [log setForegroundColor:[UIColor colorWithRed:(255/255.0) green:(58/255.0) blue:(159/255.0) alpha:1.0] backgroundColor:nil forFlag:DDLogFlagWarning];
 	
-	[DDLog addLogger:[TestFlightLogger sharedInstance]];
+    //crashlytics logger
+    [DDLog addLogger:[CrashlyticsLogger sharedInstance]];
 	
 	//===================================
     [EWBackgroundingManager sharedInstance];
@@ -83,7 +77,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-	[TestFlight manuallyEndSession];
 }
 
 

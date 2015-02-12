@@ -1,26 +1,24 @@
 PODS:
-  - CocoaLumberjack (2.0.0-beta):
-    - CocoaLumberjack/CLI
-    - CocoaLumberjack/Core
+  - CocoaLumberjack (2.0.0-rc):
+    - CocoaLumberjack/Default
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/CLI (2.0.0-beta):
+  - CocoaLumberjack/Core (2.0.0-rc)
+  - CocoaLumberjack/Default (2.0.0-rc):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Core (2.0.0-beta)
-  - CocoaLumberjack/Extensions (2.0.0-beta):
-    - CocoaLumberjack/Core
-  - TestFlightLogger (0.0.3):
-    - CocoaLumberjack
-    - TestFlightSDK
-  - TestFlightSDK (3.0.2)
+  - CocoaLumberjack/Extensions (2.0.0-rc):
+    - CocoaLumberjack/Default
+  - CrashlyticsFramework (2.2.5.2)
+  - CrashlyticsLumberjack (2.0.0-rc2):
+    - CocoaLumberjack/Default (>= 2.0.0-rc)
 
 DEPENDENCIES:
-  - CocoaLumberjack (= 2.0.0-beta)
-  - TestFlightLogger (~> 0.0)
-  - TestFlightSDK (~> 3.0)
+  - CocoaLumberjack (= 2.0.0-rc)
+  - CrashlyticsFramework (~> 2.2.5.2)
+  - CrashlyticsLumberjack
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: aadc76d7bd6c839ca84b38ed50cbf89d7cf8c693
-  TestFlightLogger: 755fa3745846e413787a2ec7d5cb531e5966de36
-  TestFlightSDK: 0c24c533748d0d84bfe7a3cb6036fa79124d84ee
+  CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
+  CrashlyticsFramework: 4e91082f3019bea7e718e1b67b0a3b56729dbc5d
+  CrashlyticsLumberjack: d41d1043ceee3312f546242e8bd3ee0ec22e39b1
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.4

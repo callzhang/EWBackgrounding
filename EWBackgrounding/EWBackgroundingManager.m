@@ -51,6 +51,9 @@
 		}];
 		
         BACKGROUNDING_FROM_START = YES;
+        
+        //play
+        [self registerAudioSession];
     }
     
     return self;
@@ -165,6 +168,7 @@
 	
     UIApplication *application = [UIApplication sharedApplication];
     NSMutableDictionary *userInfo;
+    float t;
     if (timer) {
         NSInteger count;
         NSDate *start = timer.userInfo[@"start"];
@@ -173,7 +177,6 @@
 		float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
 		float batt1 = [UIDevice currentDevice].batteryLevel;
 		float dur = -[last timeIntervalSinceNow]/3600;
-        float t;
         NSMutableString *newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", [NSDate date], start, (long)count, -[start timeIntervalSinceNow]/3600];
         if (batt0 >= batt1) {
             //not charging
@@ -206,7 +209,7 @@
 	UIBackgroundTaskIdentifier tempID = backgroundTaskIdentifier;
     //begin a new background task
     backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-        DDLogError(@"The backgound task ended!");
+        NSAssert(NO, @"Backgrounding stopped after %.1f hours of running", t);
     }];
 	//end old bg task
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -255,16 +258,13 @@
                                                     withOptions:AVAudioSessionCategoryOptionMixWithOthers
                                                           error:&error];
     //set active bg sound
-    //[self playSilentSound];
+    [self playSilentSound];
 }
 
 
 - (void)playSilentSound{
-#if !TARGET_IPHONE_SIMULATOR
-    DDLogInfo(@"Play silent sound");
-    NSURL *path = [[NSBundle mainBundle] URLForResource:@"bg" withExtension:@"caf"];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"tock" withExtension:@"caf"];
     [self playAvplayerWithURL:path];
-#endif
 }
 
 - (void)playAvplayerWithURL:(NSURL *)url{
@@ -273,11 +273,14 @@
     player = [AVPlayer playerWithURL:url];
     [player setActionAtItemEnd:AVPlayerActionAtItemEndPause];
     player.volume = 1.0;
-    if (player.status == AVPlayerStatusFailed) {
-        DDLogInfo(@"!!! AV player not ready to play.");
-    }
     //[avplayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
     [player play];
+    
+    if (player.status == AVPlayerStatusFailed) {
+        DDLogInfo(@"!!! AV player not ready to play.");
+    }else {
+        DDLogInfo(@"Play silent sound");
+    }
 }
 
 #pragma mark - delegate

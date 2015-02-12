@@ -9,40 +9,40 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-TestFlightLogger.xcscheme</key>
+		<key>Pods-CrashlyticsFramework.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-TestFlightSDK.xcscheme</key>
+		<key>Pods-CrashlyticsLumberjack.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods.xcscheme</key>
+		<key>Pods.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
-			<false/>
+			<true/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>45D5674753F54933896485C2</key>
+		<key>2546ED6CE0FD53C8133D52A6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>819CFABFF83F4EEBBDE41E22</key>
+		<key>56F8C8B663D45ACDED0CA926</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D70EF589FF884C5AAA717114</key>
+		<key>8E29CD44713FBF3499C2535A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E8262B25C3FA48359CB16DAF</key>
+		<key>FE293C30201347B8F37DB8C9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

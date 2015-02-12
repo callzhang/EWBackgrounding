@@ -1,4 +1,5 @@
+source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
-pod 'CocoaLumberjack', '2.0.0-beta'
-pod 'TestFlightSDK', '~> 3.0'
-pod 'TestFlightLogger', '~> 0.0'
+pod 'CocoaLumberjack', '2.0.0-rc'
+pod 'CrashlyticsLumberjack'
+pod 'CrashlyticsFramework', '~> 2.2.5.2'
