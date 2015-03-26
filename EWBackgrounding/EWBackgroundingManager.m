@@ -169,6 +169,7 @@
     UIApplication *application = [UIApplication sharedApplication];
     NSMutableDictionary *userInfo;
     float t;
+    NSMutableString *newLine;
     if (timer) {
         NSInteger count;
         NSDate *start = timer.userInfo[@"start"];
@@ -177,7 +178,7 @@
 		float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
 		float batt1 = [UIDevice currentDevice].batteryLevel;
 		float dur = -[last timeIntervalSinceNow]/3600;
-        NSMutableString *newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", [NSDate date], start, (long)count, -[start timeIntervalSinceNow]/3600];
+        newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", [NSDate date], start, (long)count, -[start timeIntervalSinceNow]/3600];
         if (batt0 >= batt1) {
             //not charging
             t = batt1 / ((batt0 - batt1)/dur);
@@ -217,21 +218,18 @@
     });
 	
 	//check time left
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-		double timeLeft = application.backgroundTimeRemaining;
-		DDLogInfo(@"Background time left: %.1f", timeLeft>999?999:timeLeft);
-		
-		//schedule timer
-		if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
-		NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
-		if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
-		backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
-		DDLogVerbose(@"Scheduled timer %ld", (long)randomInterval);
-		
-	});
+    double timeLeft = application.backgroundTimeRemaining;
+    [newLine appendFormat:@"Background time left: %.1f", timeLeft>999?999:timeLeft];
+    
+    //schedule timer
+    if ([backgroundingtimer isValid]) [backgroundingtimer invalidate];
+    NSInteger randomInterval = kAlarmTimerCheckInterval + arc4random_uniform(40);
+    if(randomInterval > timeLeft) randomInterval = timeLeft - 10;
+    backgroundingtimer = [NSTimer scheduledTimerWithTimeInterval:randomInterval target:self selector:@selector(backgroundKeepAlive:) userInfo:userInfo repeats:NO];
+    [newLine appendFormat:@"Scheduled timer %ld", (long)randomInterval];
+    DDLogVerbose(newLine);
 	
-	
-	//alert user
+	//alert user when suspendid
 	if (backgroundingFailNotification) {
 		[[UIApplication sharedApplication] cancelLocalNotification:backgroundingFailNotification];
 	}
