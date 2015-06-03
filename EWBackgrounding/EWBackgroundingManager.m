@@ -18,7 +18,6 @@
     BOOL BACKGROUNDING_FROM_START;
     AVPlayer *player;
 }
-
 @end
 
 @implementation EWBackgroundingManager
@@ -54,9 +53,21 @@
         
         //play
         [self registerAudioSession];
+        
+        //session
+        [self newSession];
     }
     
     return self;
+}
+
+- (void)newSession{
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    self.session = [PFObject objectWithClassName:@"session"];
+    [installation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *PF_NULLABLE_S error){
+        self.session[@"installation"] = installation;
+        [self.session saveInBackground];
+    }];
 }
 
 - (void)dealloc{
@@ -97,6 +108,8 @@
             [[UIApplication sharedApplication] cancelLocalNotification:note];
         }
     }
+    
+    [self newSession];
 }
 
 
@@ -178,7 +191,8 @@
 		float batt0 = [(NSNumber *)timer.userInfo[@"batt"] floatValue];
 		float batt1 = [UIDevice currentDevice].batteryLevel;
 		float dur = -[last timeIntervalSinceNow]/3600;
-        newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", [NSDate date], start, (long)count, -[start timeIntervalSinceNow]/3600];
+        float length = -[start timeIntervalSinceNow]/3600;
+        newLine = [NSMutableString stringWithFormat:@"\n\n===>>> [%@]Backgrounding started at %@ is checking the %ld times, backgrounding length: %.1f hours. ", [NSDate date], start, (long)count, length];
         if (batt0 >= batt1) {
             //not charging
             t = batt1 / ((batt0 - batt1)/dur);
@@ -188,6 +202,16 @@
             [newLine appendFormat:@"Current battery level is %.1f %%, and estimated time until fully chaged is %.1f hours", batt1*100.0f, t];
         }
         DDLogInfo(newLine);
+        //save
+        //if (count%10 == 0) {
+            DDLogInfo(@"Uploading info to Parse");
+            self.session[@"length"] = @(length);
+            self.session[@"count"] = @(count);
+            self.session[@"battery"] = @(batt1*100);
+            if(t != INFINITY) self.session[@"left"] = @(t);
+            [self.session saveInBackground];
+        //}
+        
         count++;
         timer.userInfo[@"count"] = @(count);
 		userInfo[@"batt"] = @(batt1);
@@ -210,7 +234,7 @@
 	UIBackgroundTaskIdentifier tempID = backgroundTaskIdentifier;
     //begin a new background task
     backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-        NSAssert(NO, @"Backgrounding stopped after %.1f hours of running", t);
+        DDLogError(@"Backgrounding stopped after %.1f hours of running", t);
     }];
 	//end old bg task
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -242,6 +266,8 @@
 		backgroundingFailNotification.soundName = @"new.caf";
 		[[UIApplication sharedApplication] scheduleLocalNotification:backgroundingFailNotification];
 	}
+    
+    
 }
 
 
@@ -261,7 +287,7 @@
 
 
 - (void)playSilentSound{
-    NSURL *path = [[NSBundle mainBundle] URLForResource:@"tock" withExtension:@"caf"];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"bg" withExtension:@"caf"];
     [self playAvplayerWithURL:path];
 }
 

@@ -1,7 +1,8 @@
 FRAMEWORK_SEARCH_PATHS = $(inherited) "$(PODS_ROOT)/CrashlyticsFramework"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/CocoaLumberjack" "${PODS_ROOT}/Headers/Public/CrashlyticsFramework" "${PODS_ROOT}/Headers/Public/CrashlyticsLumberjack"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/CocoaLumberjack" -isystem "${PODS_ROOT}/Headers/Public/CrashlyticsFramework" -isystem "${PODS_ROOT}/Headers/Public/CrashlyticsLumberjack"
-OTHER_LDFLAGS = -ObjC -l"Pods-CocoaLumberjack" -l"Pods-CrashlyticsFramework" -l"Pods-CrashlyticsLumberjack" -framework "Crashlytics"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Bolts" "${PODS_ROOT}/Headers/Public/CocoaLumberjack" "${PODS_ROOT}/Headers/Public/CrashlyticsFramework" "${PODS_ROOT}/Headers/Public/CrashlyticsLumberjack" "${PODS_ROOT}/Headers/Public/Parse"
+LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Parse"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/Bolts" -isystem "${PODS_ROOT}/Headers/Public/CocoaLumberjack" -isystem "${PODS_ROOT}/Headers/Public/CrashlyticsFramework" -isystem "${PODS_ROOT}/Headers/Public/CrashlyticsLumberjack" -isystem "${PODS_ROOT}/Headers/Public/Parse"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"Parse" -l"Pods-Bolts" -l"Pods-CocoaLumberjack" -l"Pods-CrashlyticsFramework" -l"Pods-CrashlyticsLumberjack" -l"Pods-Parse" -l"sqlite3" -l"z" -framework "AudioToolbox" -framework "CFNetwork" -framework "CoreGraphics" -framework "CoreLocation" -framework "Crashlytics" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "StoreKit" -framework "SystemConfiguration" -weak_framework "Accounts" -weak_framework "Social"
 OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
 PODS_ROOT = ${SRCROOT}/Pods

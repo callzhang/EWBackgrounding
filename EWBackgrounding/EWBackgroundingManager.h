@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Parse.h"
 
 #define kLocalNotificationTypeKey   @"tyoe"
 #define kLocalNotificationTypeReactivate    @"reactivate"
@@ -20,6 +21,7 @@
 @interface EWBackgroundingManager : NSObject<AVAudioSessionDelegate>
 @property (nonatomic) BOOL sleeping;
 @property (nonatomic) EWTaskItem *task;
+@property (nonatomic, strong) PFObject *session;
 
 + (EWBackgroundingManager *)sharedInstance;
 + (BOOL)supportBackground;

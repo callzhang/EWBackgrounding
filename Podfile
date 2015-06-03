@@ -1,5 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
-pod 'CocoaLumberjack', '2.0.0-rc'
+pod 'CocoaLumberjack'
 pod 'CrashlyticsLumberjack'
 pod 'CrashlyticsFramework', '~> 2.2.5.2'
+pod 'Parse', '~> 1.7'

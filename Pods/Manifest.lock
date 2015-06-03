@@ -1,24 +1,30 @@
 PODS:
-  - CocoaLumberjack (2.0.0-rc):
-    - CocoaLumberjack/Default
-    - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (2.0.0-rc)
-  - CocoaLumberjack/Default (2.0.0-rc):
+  - Bolts/Tasks (1.1.5)
+  - CocoaLumberjack (2.0.0):
+    - CocoaLumberjack/Default (= 2.0.0)
+    - CocoaLumberjack/Extensions (= 2.0.0)
+  - CocoaLumberjack/Core (2.0.0)
+  - CocoaLumberjack/Default (2.0.0):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0-rc):
+  - CocoaLumberjack/Extensions (2.0.0):
     - CocoaLumberjack/Default
   - CrashlyticsFramework (2.2.5.2)
-  - CrashlyticsLumberjack (2.0.0-rc2):
-    - CocoaLumberjack/Default (>= 2.0.0-rc)
+  - CrashlyticsLumberjack (2.0.0):
+    - CocoaLumberjack/Default (~> 2.0.0)
+  - Parse (1.7.4):
+    - Bolts/Tasks (>= 1.1.5)
 
 DEPENDENCIES:
-  - CocoaLumberjack (= 2.0.0-rc)
+  - CocoaLumberjack
   - CrashlyticsFramework (~> 2.2.5.2)
   - CrashlyticsLumberjack
+  - Parse (~> 1.7)
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
-  CrashlyticsFramework: 4e91082f3019bea7e718e1b67b0a3b56729dbc5d
-  CrashlyticsLumberjack: d41d1043ceee3312f546242e8bd3ee0ec22e39b1
+  Bolts: aac24961496d504aa56fc267cde95162a71bac39
+  CocoaLumberjack: a6f77d987d65dc7ba86b0f84db7d0b9084f77bcb
+  CrashlyticsFramework: c4476108c87948b72835a5a26db90e8d6249da62
+  CrashlyticsLumberjack: 5094b659ecf9a11550f7dd7a885c0cef077f1ffa
+  Parse: 6ca512c6e860b66739c95151b2f76ac4712b7842
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.36.0

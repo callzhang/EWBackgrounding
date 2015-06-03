@@ -12,6 +12,7 @@
 #import "ViewController.h"
 #import "CrashlyticsLogger.h"
 #import "Crashlytics.h"
+#import "Parse.h"
 #define NSLOG	DDLogInfo
 
 
@@ -34,6 +35,12 @@
     fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
     fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//keep a week's log
     [DDLog addLogger:fileLogger];
+    
+    //Parse
+    [Parse enableLocalDatastore];
+    [Parse setApplicationId:@"65qmAxDHC48Yptqj8UNnHotL4FkFajhUzfiVx3Dv"
+                  clientKey:@"P6kpdTtFLkDY7YYtXmUMPVyWoplKkK9abCPgkHuk"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];// [Optional] Track statistics around application opens.
     
     // we also enable colors in Xcode debug console
     // because this require some setup for Xcode, commented out here.
@@ -77,6 +84,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [EWBackgroundingManager sharedInstance].session[@"terminating"] = @(YES);
+    [[EWBackgroundingManager sharedInstance].session save];
 }
 
 
